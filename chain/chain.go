@@ -8,9 +8,17 @@ import (
 	"path/filepath"
 )
 
+// Chain : the shape of what is returned
+// should have a name corresponding to the file it's stored in
+// and the actual chain consisting of links
 type Chain struct {
 	Name  string
-	Chain []string
+	Chain []link
+}
+
+type link struct {
+	Date   string
+	Symbol rune
 }
 
 func (c *Chain) PrintChain() {
@@ -21,10 +29,16 @@ func (c *Chain) PrintChain() {
 	fmt.Println(c.Name)
 }
 
+// GetChain : returns a chain with a given name
 func GetChain(name string) (chain Chain) {
 	return Chain{}
 }
 
+// CreateChain : create a chain with a given name
+// will create a chain directory if none exists
+// directory will default to user's home directory
+// or if the ~/gochain.json exists will use the
+// defaultDirectory value from there
 func CreateChain(name string) {
 	chain := Chain{}
 	chain.Name = name

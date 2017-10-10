@@ -6,11 +6,14 @@ import (
 	"os/user"
 )
 
+// Configuration : config struct
 type Configuration struct {
 	ChainDirectory string
 	PrintLimit     int32
 }
 
+// GetConfiguration : returns a configuration based on a config file
+// or will create default values if one does not exist
 func (conf *Configuration) GetConfiguration() (config Configuration) {
 	homeDir, found := getUserDir()
 	file, err := os.Open(homeDir + "/gochain.json")
