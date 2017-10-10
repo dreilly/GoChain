@@ -1,7 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"gochain/chain"
+	"os"
+
+	"github.com/urfave/cli"
 )
 
 func main() {
@@ -13,4 +17,13 @@ func main() {
 	*/
 
 	chain.CreateChain("cchhaaiinn")
+	app := cli.NewApp()
+	app.Name = "gochain"
+	app.Usage = "Don't break the chain"
+	app.Action = func(c *cli.Context) error {
+		fmt.Println("chains")
+		return nil
+	}
+
+	app.Run(os.Args)
 }
