@@ -2,28 +2,16 @@ package main
 
 import (
 	"fmt"
-	"gochain/chain"
 	"os"
 
-	"github.com/urfave/cli"
+	"gochain/chain"
+	"gochain/cmd"
 )
 
 func main() {
-	/*
-		args := os.Args[1]
-		if len(args) != 0 {
-			fmt.Println(args)
-		}
-	*/
-
 	chain.CreateChain("cchhaaiinn")
-	app := cli.NewApp()
-	app.Name = "gochain"
-	app.Usage = "Don't break the chain"
-	app.Action = func(c *cli.Context) error {
-		fmt.Println("chains")
-		return nil
+	if err := cmd.RootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
-
-	app.Run(os.Args)
 }
