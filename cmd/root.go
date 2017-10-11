@@ -13,7 +13,7 @@ var RootCmd = &cobra.Command{
 				  The goal is to not break the chain.
 				  `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("hi")
+		fmt.Println("Please enter a valid command.  For a listing use -h or --help")
 	},
 }
 

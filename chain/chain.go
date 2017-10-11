@@ -14,13 +14,19 @@ import (
 // should have a name corresponding to the file it's stored in
 // and the actual chain consisting of links
 type Chain struct {
-	Name  string
-	Chain []link
+	Name     string
+	Chain    []link
+	MetaData chainMetaData
 }
 
 type link struct {
 	Date   string
 	Symbol rune
+}
+
+type chainMetaData struct {
+	Description  string
+	CreationDate string
 }
 
 func (c *Chain) PrintChain() {
@@ -89,6 +95,8 @@ func createChain(name string) (bool, error) {
 			if err != nil {
 				return false, err
 			}
+			newChainFile.WriteString(getNewFileLayout(name))
+			newChainFile.Sync()
 			newChainFile.Close()
 		} else {
 			return false, existErr
@@ -98,6 +106,10 @@ func createChain(name string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func getNewFileLayout(name string) string {
+	return "new file junk here"
 }
 
 // GetAllChains : returns list of all chains in chain dir
