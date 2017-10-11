@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"gochain/chain"
-
 	"github.com/spf13/cobra"
 )
 

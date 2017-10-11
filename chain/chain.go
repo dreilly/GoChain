@@ -4,8 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"gochain/config"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // Chain : the shape of what is returned
@@ -96,4 +98,23 @@ func createChain(name string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+// GetAllChains : returns list of all chains in chain dir
+func GetAllChains() (list []string, readError error) {
+	config := config.Configuration{}
+	config.GetConfiguration()
+	chainPath := filepath.Join(config.ChainDirectory, "Chains")
+	files, err := ioutil.ReadDir(chainPath)
+	if err != nil {
+		return nil, err
+	}
+	fileNames := make([]string, len(files), len(files))
+	for i, f := range files {
+		basename := f.Name()
+		name := strings.TrimSuffix(basename, filepath.Ext(basename))
+		fileNames[i] = name
+	}
+
+	return fileNames, nil
 }
