@@ -1,9 +1,9 @@
 package chain
 
 import (
+	"errors"
 	"fmt"
 	"gochain/config"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -39,23 +39,31 @@ func GetChain(name string) (chain Chain) {
 // directory will default to user's home directory
 // or if the ~/gochain.json exists will use the
 // defaultDirectory value from there
-func CreateChain(name string) {
+func CreateChain(name string) error {
 	chain := Chain{}
 	chain.Name = name
 	createChainDir()
-	createChain(name)
+	_, err := createChain(name)
 
-	return
+	return err
 }
 
-func createChainDir() {
+func createChainDir() error {
 	config := config.Configuration{}
 	config.GetConfiguration()
 
 	dirPath := filepath.Join(config.ChainDirectory, "Chains")
-	if exist, _ := objExists(dirPath); !exist {
-		os.MkdirAll(dirPath, os.ModePerm)
+	if exist, err := objExists(dirPath); !exist {
+		if err == nil {
+			os.MkdirAll(dirPath, os.ModePerm)
+		} else {
+			return err
+		}
+	} else {
+		return errors.New("directory creation failed")
 	}
+
+	return nil
 }
 
 func objExists(path string) (bool, error) {
@@ -73,12 +81,18 @@ func createChain(name string) (bool, error) {
 	config := config.Configuration{}
 	config.GetConfiguration()
 	chainPath := filepath.Join(config.ChainDirectory, "Chains", name+".chain")
-	if exist, _ := objExists(chainPath); !exist {
-		newChainFile, err := os.Create(chainPath)
-		if err != nil {
-			log.Fatal(err)
+	if exist, existErr := objExists(chainPath); !exist {
+		if existErr == nil {
+			newChainFile, err := os.Create(chainPath)
+			if err != nil {
+				return false, err
+			}
+			newChainFile.Close()
+		} else {
+			return false, existErr
 		}
-		newChainFile.Close()
+	} else {
+		return false, errors.New("a chain with name already exists")
 	}
 
 	return true, nil

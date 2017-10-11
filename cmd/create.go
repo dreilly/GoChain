@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"gochain/chain"
+
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +18,12 @@ var createCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add new chain")
+		newChain := chain.CreateChain(args[0])
+		if newChain != nil {
+			fmt.Println("Creation Failed!")
+			fmt.Println(newChain)
+			return
+		}
+		fmt.Println(args[0] + " Chain Created.  Get To Work!")
 	},
 }
