@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"gochain/chain"
 
 	"github.com/spf13/cobra"
 )
@@ -16,6 +16,7 @@ var linkCmd = &cobra.Command{
 	Long:  ``,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add link")
+		c := chain.Chain{}
+		c.CreateLink(args[0])
 	},
 }

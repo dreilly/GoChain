@@ -22,8 +22,8 @@ type Chain struct {
 }
 
 type link struct {
-	Date   string
-	Symbol rune
+	date   string
+	symbol rune
 }
 
 type chainMetaData struct {
@@ -32,17 +32,48 @@ type chainMetaData struct {
 }
 
 // PrintChain : prints this chain
-func (c *Chain) PrintChain() {
-	x := config.Configuration{}
-	x.GetConfiguration()
+func (chain *Chain) PrintChain(name string) error {
+	c := config.Configuration{}
+	c.GetConfiguration()
+	chainPath := filepath.Join(c.ChainDirectory, "Chains", name+".chain")
+	file, err := os.Open(chainPath)
+	if err != nil {
+		return err
+	}
 
-	c.Name = "My Chain"
-	fmt.Println(c.Name)
+	decoder := json.NewDecoder(file)
+	decodeErr := decoder.Decode(chain)
+	if decodeErr != nil {
+		return decodeErr
+	}
+
+	// TODO break this into it's own method(s)
+	// provide flags for different printing types
+	// ie: basic, detailed, limits
+	for _, c := range chain.ChainLinks {
+		fmt.Printf("[%c]", c.symbol)
+	}
+
+	return nil
 }
 
 // GetChain : returns a chain with a given name
-func GetChain(name string) (chain Chain) {
-	return Chain{}
+func (chain *Chain) GetChain(name string) (myErr error) {
+	c := config.Configuration{}
+	c.GetConfiguration()
+	chainPath := filepath.Join(c.ChainDirectory, "Chains", name+".chain")
+	file, err := os.Open(chainPath)
+	if err != nil {
+		return err
+	}
+
+	decoder := json.NewDecoder(file)
+	decodeErr := decoder.Decode(chain)
+	if decodeErr != nil {
+		return decodeErr
+	}
+
+	return
 }
 
 // CreateChain : create a chain with a given name
@@ -115,8 +146,8 @@ func createChain(name string) (bool, error) {
 func getNewFileLayout(name string) ([]byte, error) {
 	l := make([]link, 1, 1)
 	t := time.Now()
-	l[0].Date = t.String()
-	l[0].Symbol = '_'
+	l[0].date = t.String()
+	l[0].symbol = ' '
 
 	chain := Chain{
 		name,
@@ -151,4 +182,17 @@ func GetAllChains() (list []string, readError error) {
 	}
 
 	return fileNames, nil
+}
+
+// CreateLink : creates link on current chain
+func (chain *Chain) CreateLink(name string) error {
+	chain.GetChain(name)
+	t := time.Now()
+	chain.ChainLinks = append(chain.ChainLinks, link{t.String(), 'X'})
+
+	return nil
+}
+
+func (chain *Chain) WriteChainToFile(name string) {
+	// TODO write the updated chain back to file
 }

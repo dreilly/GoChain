@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"fmt"
+	"gochain/chain"
 
 	"github.com/spf13/cobra"
 )
@@ -16,13 +16,7 @@ var printCmd = &cobra.Command{
 	Long:  `Prints a specified chain up to the config's length`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("this is where i would print the chain homie")
-		printChain(args[0])
+		c := chain.Chain{}
+		c.PrintChain(args[0])
 	},
-}
-
-func printChain(name string) error {
-	// TODO: print stuff
-	fmt.Println(name)
-	return nil
 }
