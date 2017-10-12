@@ -1,6 +1,7 @@
 package chain
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"gochain/config"
@@ -8,15 +9,16 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 // Chain : the shape of what is returned
 // should have a name corresponding to the file it's stored in
 // and the actual chain consisting of links
 type Chain struct {
-	Name     string
-	Chain    []link
-	MetaData chainMetaData
+	Name       string
+	ChainLinks []link
+	MetaData   chainMetaData
 }
 
 type link struct {
@@ -29,6 +31,7 @@ type chainMetaData struct {
 	CreationDate string
 }
 
+// PrintChain : prints this chain
 func (c *Chain) PrintChain() {
 	x := config.Configuration{}
 	x.GetConfiguration()
@@ -95,7 +98,8 @@ func createChain(name string) (bool, error) {
 			if err != nil {
 				return false, err
 			}
-			newChainFile.WriteString(getNewFileLayout(name))
+			chainSkeleton, err := getNewFileLayout(name)
+			newChainFile.Write(chainSkeleton)
 			newChainFile.Sync()
 			newChainFile.Close()
 		} else {
@@ -108,8 +112,26 @@ func createChain(name string) (bool, error) {
 	return true, nil
 }
 
-func getNewFileLayout(name string) string {
-	return "new file junk here"
+func getNewFileLayout(name string) ([]byte, error) {
+	l := make([]link, 1, 1)
+	t := time.Now()
+	l[0].Date = t.String()
+	l[0].Symbol = '_'
+
+	chain := Chain{
+		name,
+		l,
+		chainMetaData{
+			"This is my new chain!",
+			t.String(),
+		},
+	}
+	jm, err := json.Marshal(chain)
+	if err != nil {
+		return nil, err
+	}
+
+	return jm, nil
 }
 
 // GetAllChains : returns list of all chains in chain dir
