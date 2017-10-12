@@ -51,7 +51,7 @@ func (chain *Chain) PrintChain(name string) error {
 	// provide flags for different printing types
 	// ie: basic, detailed, limits
 	for _, c := range chain.ChainLinks {
-		fmt.Printf("[%c]", c.symbol)
+		fmt.Printf("[%c]\n", c.symbol)
 	}
 
 	return nil
