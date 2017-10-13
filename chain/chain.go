@@ -22,8 +22,8 @@ type Chain struct {
 }
 
 type link struct {
-	date   string
-	symbol rune
+	Date   string
+	Symbol rune
 }
 
 type chainMetaData struct {
@@ -51,8 +51,9 @@ func (chain *Chain) PrintChain(name string) error {
 	// provide flags for different printing types
 	// ie: basic, detailed, limits
 	for _, c := range chain.ChainLinks {
-		fmt.Printf("[%c]\n", c.symbol)
+		fmt.Printf("[%c]", c.Symbol)
 	}
+	fmt.Println()
 
 	return nil
 }
@@ -146,8 +147,8 @@ func createChain(name string) (bool, error) {
 func getNewFileLayout(name string) ([]byte, error) {
 	l := make([]link, 1, 1)
 	t := time.Now()
-	l[0].date = t.String()
-	l[0].symbol = ' '
+	l[0].Date = t.String()
+	l[0].Symbol = ' '
 
 	chain := Chain{
 		name,
