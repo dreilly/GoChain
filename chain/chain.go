@@ -189,10 +189,31 @@ func (chain *Chain) CreateLink(name string) error {
 	chain.GetChain(name)
 	t := time.Now()
 	chain.ChainLinks = append(chain.ChainLinks, link{t.String(), 'X'})
+	chain.writeChainToFile(name)
 
 	return nil
 }
 
-func (chain *Chain) WriteChainToFile(name string) {
-	// TODO write the updated chain back to file
+func (chain *Chain) writeChainToFile(name string) error {
+	conf := config.Configuration{}
+	conf.GetConfiguration()
+
+	chainPath := filepath.Join(conf.ChainDirectory, "Chains", name+".chain")
+	if exist, err := objExists(chainPath); exist {
+		if err != nil {
+			return err
+		}
+		jm, jErr := json.Marshal(chain)
+		if jErr != nil {
+			return jErr
+		}
+		wErr := ioutil.WriteFile(chainPath, jm, 0666)
+		if wErr != nil {
+			return wErr
+		}
+	} else {
+		return errors.New("Can not find chain")
+	}
+
+	return nil
 }
