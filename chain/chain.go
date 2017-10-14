@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"gochain/config"
+	"gochain/utility"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -22,13 +23,13 @@ type Chain struct {
 }
 
 type link struct {
-	Date   string
+	Date   time.Time
 	Symbol rune
 }
 
 type chainMetaData struct {
 	Description  string
-	CreationDate string
+	CreationDate time.Time
 }
 
 // PrintChain : prints this chain
@@ -147,7 +148,7 @@ func createChain(name string) (bool, error) {
 func getNewFileLayout(name string) ([]byte, error) {
 	l := make([]link, 1, 1)
 	t := time.Now()
-	l[0].Date = t.String()
+	l[0].Date = t
 	l[0].Symbol = ' '
 
 	chain := Chain{
@@ -155,7 +156,7 @@ func getNewFileLayout(name string) ([]byte, error) {
 		l,
 		chainMetaData{
 			"This is my new chain!",
-			t.String(),
+			t,
 		},
 	}
 	jm, err := json.Marshal(chain)
@@ -189,7 +190,23 @@ func GetAllChains() (list []string, readError error) {
 func (chain *Chain) CreateLink(name string) error {
 	chain.GetChain(name)
 	t := time.Now()
-	chain.ChainLinks = append(chain.ChainLinks, link{t.String(), 'X'})
+	lastLinkIndex := len(chain.ChainLinks) - 1
+	// fmt.Println(chain.ChainLinks[lastLinkIndex].Date)
+	ddiff := getDaysSince(chain.ChainLinks[lastLinkIndex].Date)
+	emptyLinksToFill := 0
+	if ddiff > 1 {
+		emptyLinksToFill = ddiff - 1
+	}
+	if emptyLinksToFill > 0 {
+		for i := 0; i < emptyLinksToFill; i++ {
+			chain.ChainLinks = append(chain.ChainLinks, link{t, ' '})
+		}
+	}
+	if ddiff != 0 {
+		chain.ChainLinks = append(chain.ChainLinks, link{t, 'X'})
+	} else {
+		chain.ChainLinks[lastLinkIndex].Symbol = 'X'
+	}
 	chain.writeChainToFile(name)
 
 	return nil
@@ -217,4 +234,9 @@ func (chain *Chain) writeChainToFile(name string) error {
 	}
 
 	return nil
+}
+
+func getDaysSince(from time.Time) int {
+	_, _, d, _, _, _ := utility.Diff(from, time.Now())
+	return d
 }
