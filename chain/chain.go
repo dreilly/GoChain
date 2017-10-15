@@ -33,7 +33,7 @@ type chainMetaData struct {
 }
 
 // PrintChain : prints this chain
-func (chain *Chain) PrintChain(name string) error {
+func (chain *Chain) PrintChain(name string, detail bool) error {
 	c := config.Configuration{}
 	c.GetConfiguration()
 	chainPath := filepath.Join(c.ChainDirectory, "Chains", name+".chain")
@@ -48,15 +48,32 @@ func (chain *Chain) PrintChain(name string) error {
 		return decodeErr
 	}
 
-	// TODO break this into it's own method(s)
-	// provide flags for different printing types
-	// ie: basic, detailed, limits
-	for _, c := range chain.ChainLinks {
+	if detail {
+		printVerbose(chain.ChainLinks)
+	} else {
+		printSimple(chain.ChainLinks)
+	}
+
+	return nil
+}
+
+func printSimple(links []link) {
+	for _, c := range links {
 		fmt.Printf("[%c]", c.Symbol)
 	}
 	fmt.Println()
+}
 
-	return nil
+func printVerbose(links []link) {
+	for _, c := range links {
+		fmt.Printf("\tDate: \t%s", c.Date.String())
+		fmt.Println()
+		linked := c.Symbol == 'X'
+		fmt.Printf("\tLinked: %t", linked)
+		fmt.Println()
+		fmt.Println()
+	}
+	fmt.Println()
 }
 
 // GetChain : returns a chain with a given name
