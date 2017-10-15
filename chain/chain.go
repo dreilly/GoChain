@@ -208,8 +208,11 @@ func (chain *Chain) CreateLink(name string) error {
 	chain.GetChain(name)
 	t := time.Now()
 	lastLinkIndex := len(chain.ChainLinks) - 1
-	// fmt.Println(chain.ChainLinks[lastLinkIndex].Date)
-	ddiff := getDaysSince(chain.ChainLinks[lastLinkIndex].Date)
+
+	xTime := chain.ChainLinks[lastLinkIndex].Date
+	yTime := utility.StripTimeValues(xTime)
+	ddiff := getDaysSince(yTime)
+
 	emptyLinksToFill := 0
 	if ddiff > 1 {
 		emptyLinksToFill = ddiff - 1

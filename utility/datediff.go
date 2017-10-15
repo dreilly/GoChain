@@ -48,3 +48,9 @@ func Diff(a, b time.Time) (year, month, day, hour, min, sec int) {
 
 	return
 }
+
+// StripTimeValues : return only date parts of a time.Time struct
+func StripTimeValues(t time.Time) time.Time {
+	year, month, day := t.Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+}
