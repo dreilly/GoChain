@@ -205,7 +205,11 @@ func (chain *Chain) CreateLink(name string) error {
 	if ddiff != 0 {
 		chain.ChainLinks = append(chain.ChainLinks, link{t, 'X'})
 	} else {
-		chain.ChainLinks[lastLinkIndex].Symbol = 'X'
+		if chain.ChainLinks[lastLinkIndex].Symbol == 'X' {
+			fmt.Println("Link for today already exists")
+		} else {
+			chain.ChainLinks[lastLinkIndex].Symbol = 'X'
+		}
 	}
 	chain.writeChainToFile(name)
 
