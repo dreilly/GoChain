@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"gochain/chain"
+	"GoChain/chain"
 
 	"github.com/spf13/cobra"
 )

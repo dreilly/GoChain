@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"gochain/chain"
+	"GoChain/chain"
+
 	"github.com/spf13/cobra"
 )
 

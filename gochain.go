@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"gochain/cmd"
+	"GoChain/cmd"
 )
 
 func main() {

@@ -1,11 +1,11 @@
 package chain
 
 import (
+	"GoChain/config"
+	"GoChain/utility"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gochain/config"
-	"gochain/utility"
 	"io/ioutil"
 	"os"
 	"path/filepath"
