@@ -219,7 +219,8 @@ func (chain *Chain) CreateLink(name string) error {
 	}
 	if emptyLinksToFill > 0 {
 		for i := 0; i < emptyLinksToFill; i++ {
-			chain.ChainLinks = append(chain.ChainLinks, link{t, ' '})
+			fillDate := yTime.AddDate(0, 0, i+1)
+			chain.ChainLinks = append(chain.ChainLinks, link{fillDate, ' '})
 		}
 	}
 	if ddiff != 0 {
