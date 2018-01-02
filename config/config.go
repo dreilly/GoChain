@@ -12,6 +12,8 @@ type Configuration struct {
 	PrintLimit     int32
 }
 
+// test
+
 // GetConfiguration : returns a configuration based on a config file
 // or will create default values if one does not exist
 func (conf *Configuration) GetConfiguration() (config Configuration) {
